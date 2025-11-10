@@ -1,0 +1,26 @@
+# public_html/.htaccess
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Optional: normalize trailing slashes
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Serve existing files from /public (css, js, images, etc.)
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Serve existing directories from /public
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
+    RewriteRule ^(.*)$ /public/$1/ [L]
+
+    # Everything else -> Laravel front controller
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^ /public/index.php [L]
+</IfModule>
+
+# Security/nice-to-haves
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
